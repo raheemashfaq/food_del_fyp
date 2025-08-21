@@ -46,18 +46,26 @@ const MyOrders = () => {
               </p>
               <p>{formatPKR(order.amount)}</p>
               <p>Items: {order.items.length}</p>
+
+              {/* ✅ Payment Method Display */}
+              <p>
+                <b>Payment:</b>{' '}
+                {order.paymentMethod === 'CashOnDelivery'
+                  ? 'COD 💵'
+                  : 'Online 💳'}
+              </p>
+
               <p>
                 <span>&#x25cf;</span> <b>{order.status}</b>
               </p>
               <div className="order-buttons">
-                 <button
+                <button
                   onClick={() => navigator.clipboard.writeText(order._id)}
                   title="Copy Order ID"
                 >
-                Copy ID
+                  Copy ID
                 </button>
                 <button onClick={fetchOrders}>Track Order</button>
-               
               </div>
             </div>
           ))
