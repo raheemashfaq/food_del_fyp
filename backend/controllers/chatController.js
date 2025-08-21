@@ -1,4 +1,3 @@
-// controllers/chatController.js
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -6,10 +5,6 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import Food from "../models/foodModel.js";
 import orderModel from "../models/orderModel.js";
 
-// Allowed delivery cities
-const deliveryCities = ["Lahore", "Kasur", "Karachi"];
-
-// Create Gemini client
 let model = null;
 if (process.env.GEMINI_API_KEY) {
   try {
@@ -19,111 +14,140 @@ if (process.env.GEMINI_API_KEY) {
   } catch (err) {
     console.warn("⚠️ Could not initialize Gemini:", err.message);
   }
-} else {
-  console.warn("⚠️ GEMINI_API_KEY missing in .env");
 }
 
-// Simple fallback rule-based reply
-function ruleBasedReply(message) {
-  const m = message.toLowerCase();
-  if (m.includes("deliver"))
-    return "We deliver in Lahore, Kasur, and Karachi. Please share your city.";
-  if (m.includes("hello") || m.includes("hi"))
-    return "Hi! Please tell me your city to get started.";
-  return "Sorry, I can only help with food orders, delivery, or menu items.";
-}
+const sessionState = {};
 
-// Main Chat Handler
 export const chatHandler = async (req, res) => {
-  const { message, city, orderId } = req.body;
+  const { message } = req.body;
+  const userId = req.body.userId || "guest";
   if (!message) return res.status(400).json({ error: "Message required" });
 
-  let reply = "";
-  const msg = message.toLowerCase();
+  const userMsg = message.toLowerCase();
+  const state = sessionState[userId] || {};
+  let foods = [];
 
-  // If user asks menu but no city given
-  if (msg.includes("menu") && !city) {
-    return res.json({
-      reply: "Please tell me your city first so I can check delivery availability.",
-    });
+  try {
+    foods = await Food.find({}).select("name price category availableCities").lean();
+  } catch (err) {
+    console.warn("⚠️ DB fetch failed:", err.message);
   }
 
-  // If city provided but not in allowed list
-  if (city && !deliveryCities.includes(city)) {
-    return res.json({
-      reply: `Sorry, we do not deliver in ${city}. We currently serve ${deliveryCities.join(
-        ", "
-      )}.`,
-    });
+  if (state.intent === "awaiting_city") {
+    sessionState[userId] = {};
+    return res.json({ reply: `Estimated delivery time to ${message} is 30–45 minutes.`, source: "followup" });
   }
 
-  // If city is valid and user asks menu
-  if (msg.includes("menu") && deliveryCities.includes(city)) {
+  if (state.intent === "awaiting_orderId") {
+    sessionState[userId] = {};
     try {
-      const foods = await Food.find({})
-        .limit(10)
-        .select("name price category")
-        .lean();
-
-      if (!foods?.length) {
-        reply = "Sorry, the menu is not available right now.";
+      const order = await orderModel.findById(message).lean();
+      if (order) {
+        const orderReply = `
+Order ID: ${order._id}
+Status: ${order.status}
+Payment: ${order.payment ? "Paid ✅" : "Pending ❌"}
+Amount: Rs ${order.amount}
+Items: ${order.items.map(i => `${i.name} x${i.quantity}`).join(", ")}
+Address: ${order.address.city || order.address.street || "N/A"}
+Date: ${new Date(order.date).toLocaleString()}
+`;
+        return res.json({ reply: orderReply, source: "followup" });
       } else {
-        reply =
-          `Here’s our menu for ${city}:\n` +
-          foods.map((f) => `${f.name} - Rs ${f.price}`).join("\n");
+        return res.json({ reply: `No order found for ID ${message}.`, source: "followup" });
       }
-      return res.json({ reply });
     } catch (err) {
-      console.error("Menu fetch error:", err.message);
+      return res.json({ reply: `Error fetching order: ${err.message}`, source: "followup" });
+    }
+  }
+
+  if (userMsg.includes("track my order")) {
+    if (userId === "guest") {
       return res.json({
-        reply: "Unable to fetch menu at the moment. Please try again later.",
+        reply: `🔐 Please sign in to continue. Once you're logged in, I’ll fetch your latest order automatically.`,
+        source: "auth"
       });
     }
-  }
 
-  // Order status check
-  if (msg.includes("order") && orderId) {
     try {
-      const order = await orderModel.findById(orderId).lean();
-      if (order) {
-        reply = `Order ID: ${order._id}\nStatus: ${order.status}\nPayment: ${
-          order.payment ? "Paid ✅" : "Pending ❌"
-        }\nAmount: Rs ${order.amount}`;
-      } else {
-        reply = `No order found for ID ${orderId}`;
+      const latestOrder = await orderModel.findOne({ userId }).sort({ date: -1 }).lean();
+      if (!latestOrder) {
+        return res.json({
+          reply: `😕 You don’t have any orders yet. Want help placing one?`,
+          source: "no-orders"
+        });
       }
-      return res.json({ reply });
+
+      const orderReply = `
+🧾 Latest Order:
+Order ID: ${latestOrder._id}
+Status: ${latestOrder.status}
+Payment: ${latestOrder.payment ? "Paid ✅" : "Pending ❌"}
+Amount: Rs ${latestOrder.amount}
+Items: ${latestOrder.items.map(i => `${i.name} x${i.quantity}`).join(", ")}
+Address: ${latestOrder.address.city || latestOrder.address.street || "N/A"}
+Date: ${new Date(latestOrder.date).toLocaleString()}
+`;
+
+      return res.json({ reply: orderReply, source: "auto-track" });
     } catch (err) {
-      return res.json({ reply: `Error fetching order: ${err.message}` });
+      return res.json({ reply: `⚠️ Error fetching your order: ${err.message}`, source: "error" });
     }
   }
 
-  // If Gemini is available, use AI for polite fallback
+  if (userMsg.includes("menu")) {
+    if (foods.length) {
+      const menuList = foods.map(f => `${f.name} (Rs ${f.price})`).join(", ");
+      return res.json({ reply: `We have ${menuList}.`, source: "rule" });
+    } else {
+      return res.json({ reply: "Sorry, the menu is not available right now.", source: "rule" });
+    }
+  }
+
+  if (userMsg.includes("delivery time")) {
+    sessionState[userId] = { intent: "awaiting_city" };
+    return res.json({ reply: "Please provide your city so I can estimate delivery time.", source: "rule" });
+  }
+
+  const priceMatch = userMsg.match(/under\s+(\d+)/);
+  if (priceMatch) {
+    const limit = parseInt(priceMatch[1]);
+    const filtered = foods.filter(f => f.price < limit);
+    if (filtered.length) {
+      const list = filtered.map(f => `${f.name} (Rs ${f.price})`).join(", ");
+      return res.json({ reply: `Here are items under Rs ${limit}: ${list}.`, source: "rule" });
+    } else {
+      return res.json({ reply: `Sorry, no items under Rs ${limit} on the menu.`, source: "rule" });
+    }
+  }
+
+  const requestedFood = foods.find(f => userMsg.includes(f.name.toLowerCase()));
+  if (requestedFood) {
+    return res.json({ reply: `We have ${requestedFood.name} for Rs ${requestedFood.price}.`, source: "rule" });
+  }
+
   if (model) {
     try {
+      const foodSummary = foods.map(f => `${f.name} (Rs ${f.price})`).join(" | ") || "No menu available";
       const prompt = `
-You are a polite Food Ordering Assistant for "MyFoodApp".
+You are a Food Ordering Assistant for "MyFoodApp".
 
 Rules:
-- Always ask for the user's city before showing the menu.
 - Only answer about menu, delivery, or orders.
-- If user asks something outside this scope, politely say:
-  "Sorry, I can only help with food orders, delivery, or menu items."
+- NEVER invent new dishes or cities.
+- If unrelated → reply: "Sorry, I can only help with food orders, delivery, or menu items."
 
 User Message: "${message}"
-User City: "${city || "not provided"}"
-Delivery Cities: ${deliveryCities.join(", ")}
+Menu: ${foodSummary}
 `;
 
       const result = await model.generateContent([prompt]);
-      reply = result.response.text().trim();
-      return res.json({ reply, source: "gemini" });
+      const textReply = result.response.text().trim();
+      return res.json({ reply: textReply, source: "gemini" });
     } catch (err) {
-      console.error("Gemini call failed:", err.message);
-      return res.json({ reply: ruleBasedReply(message), source: "fallback" });
+      return res.json({ reply: "Sorry, I can only help with food orders, delivery, or menu items.", source: "fallback" });
     }
   }
 
-  // Fallback if no Gemini
-  return res.json({ reply: ruleBasedReply(message), source: "fallback" });
+  return res.json({ reply: "Sorry, I can only help with food orders, delivery, or menu items.", source: "fallback" });
 };

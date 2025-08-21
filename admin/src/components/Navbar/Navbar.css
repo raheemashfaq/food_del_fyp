@@ -8,5 +8,7 @@
     width:max(10%, 80px);
 }
 .navbar .profile{
-    width:40px;
+    width:50px;
+    border: 1px solid tomato;
+    border-radius: 50%;
 }

@@ -49,7 +49,16 @@ const MyOrders = () => {
               <p>
                 <span>&#x25cf;</span> <b>{order.status}</b>
               </p>
-              <button onClick={fetchOrders}>Track Order</button>
+              <div className="order-buttons">
+                 <button
+                  onClick={() => navigator.clipboard.writeText(order._id)}
+                  title="Copy Order ID"
+                >
+                Copy ID
+                </button>
+                <button onClick={fetchOrders}>Track Order</button>
+               
+              </div>
             </div>
           ))
         )}

@@ -4,9 +4,11 @@ import './LoginPopup.css';
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../Context/StoreContext';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';   // ✅ Import useNavigate
 
 const LoginPopup = ({ setShowLogin }) => {
   const { url, setToken } = useContext(StoreContext);
+  const navigate = useNavigate();   // ✅ Initialize navigation
 
   const [currState, setCurrState] = useState('Login');
   const [data, setData] = useState({
@@ -22,7 +24,8 @@ const LoginPopup = ({ setShowLogin }) => {
 
   const onLogin = async (event) => {
     event.preventDefault();
-    const endpoint = currState === 'Login' ? '/api/user/login' : '/api/user/register';
+    const endpoint =
+      currState === 'Login' ? '/api/user/login' : '/api/user/register';
     const newUrl = `${url}${endpoint}`;
 
     try {
@@ -32,12 +35,17 @@ const LoginPopup = ({ setShowLogin }) => {
           setToken(response.data.token);
           localStorage.setItem('token', response.data.token);
           setShowLogin(false);
+
+          navigate('/');   // ✅ Redirect after login
         } else {
           alert(response.data.message);
         }
       } else {
         if (response.data.success) {
-          alert(response.data.message || 'Registration successful! Please check your email to verify your account.');
+          alert(
+            response.data.message ||
+              'Registration successful! Please check your email to verify your account.'
+          );
           setShowLogin(false);
         } else {
           alert(response.data.message);
@@ -59,6 +67,8 @@ const LoginPopup = ({ setShowLogin }) => {
         setToken(response.data.token);
         localStorage.setItem('token', response.data.token);
         setShowLogin(false);
+
+        navigate('/');   // ✅ Redirect after Google login
       } else {
         alert(response.data.message);
       }
@@ -77,7 +87,11 @@ const LoginPopup = ({ setShowLogin }) => {
       <form onSubmit={onLogin} className="login-popup-container">
         <div className="login-popup-title">
           <h2>{currState}</h2>
-          <img onClick={() => setShowLogin(false)} src={assets.cross_icon} alt="Close" />
+          <img
+            onClick={() => setShowLogin(false)}
+            src={assets.cross_icon}
+            alt="Close"
+          />
         </div>
         <div className="login-popup-inputs">
           {currState !== 'Login' && (

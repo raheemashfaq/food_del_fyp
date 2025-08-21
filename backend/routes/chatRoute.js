@@ -1,10 +1,10 @@
-// routes/chatRoute.js
 import express from "express";
 import { chatHandler } from "../controllers/chatController.js";
+import authMiddleware from "../middleware/auth.js";
 
 const chatRouter = express.Router();
 
-// POST /api/chat
-chatRouter.post("/", chatHandler);
+// Apply authMiddleware to decode token and inject userId
+chatRouter.post("/", authMiddleware, chatHandler);
 
 export default chatRouter;

@@ -28,13 +28,13 @@ const Footer = () => {
             <div className="footer-content-right">
                 <h2>GET IN TOUCH</h2>
                 <ul>
-                    <li>+9197929031xx</li>
-                    <li>contact@foody.com</li>
+                    <li>+92 3227198757</li>
+                    <li>iraheemifhfaq@foody.com</li>
                 </ul>
             </div>
         </div>
         <hr/>
-        <p className="footer-copyright">Copyright 2024 © Foody.com - All Right Reserved.</p>
+        <p className="footer-copyright">Copyright 2025 © Foody.com - All Right Reserved.</p>
     </div>
   )
 }

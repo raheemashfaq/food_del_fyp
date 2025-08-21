@@ -22,36 +22,6 @@ const Add = () => {
         setData(data =>({...data, [name]:value}))
     }
 
-    //only for chking purpose
-    // useEffect(()=>{
-    //     console.log(data);
-    // },[data])
-
-    // const onSubmitHandler = async (event) => {
-    //     event.preventDefault();
-    //     const formData = new FormData();
-    //     formData.append("name",data.name)
-    //     formData.append("description",data.description)
-    //     formData.append("price",Number(data.price))
-    //     formData.append("category",data.category)
-    //     formData.append("image",data.image)
-
-    //     const response = await axios.post(`${url}/api/food/add`,formData);
-    //     if(response.data.success){
-    //         setData({
-    //             name:"",
-    //             description:"",
-    //             price:"",
-    //             category:"Salad"
-    //         })
-    //         setImage(false)
-    //            toast.success(response.data.message);
-    //     }
-    //     else{
-    //         console.log(Error);
-    //     }
-    // }
-
     const onSubmitHandler = async (event) => {
         event.preventDefault();
         
@@ -120,7 +90,7 @@ const Add = () => {
                 </div>
                 <div className="add-price flex-col">
                     <p>Product Price</p>
-                    <input onChange = {onChangeHandler} value={data.price} type="Number" name="price" placeholder="$20" />
+                    <input onChange = {onChangeHandler} value={data.price} type="Number" name="price" placeholder="Rs.20" />
                 </div>
             </div>
             <button type='submit' className="add-btn">ADD</button>

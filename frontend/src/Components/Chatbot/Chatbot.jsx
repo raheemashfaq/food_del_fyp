@@ -1,39 +1,98 @@
-// src/components/Chatbot/Chatbot.jsx
 import React, { useEffect, useRef, useState, useContext } from "react";
-import { StoreContext } from "../../Context/StoreContext"; 
+import { StoreContext } from "../../Context/StoreContext";
+import "./Chatbot.css";
 
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState([
-    { from: "bot", text: "Hi! I'm your food assistant. Ask about menu, delivery or order status." }
-  ]);
+  const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
   const scrollRef = useRef(null);
-  const { url, token } = useContext(StoreContext); // use your base url from context
+  const { url } = useContext(StoreContext);
 
+  const avatarBot = "🤖";
+  const avatarUser = "🧑";
+  const botName = "TomatoBot";
+  const userName = "You";
+  const quickReplies = ["Show menu", "Track my order", "Delivery time",];
+
+  // Load chat history from localStorage
   useEffect(() => {
-    if (scrollRef.current) scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
-  }, [messages, open]);
+    const saved = localStorage.getItem("chatHistory");
+    if (saved) {
+      setMessages(JSON.parse(saved));
+    } else {
+      setMessages([
+        {
+          from: "bot",
+          name: botName,
+          text: "Hi! I'm your food assistant. Ask about menu, delivery or order status.",
+          timestamp: new Date()
+        }
+      ]);
+    }
+  }, []);
+
+  // Save chat history and scroll to bottom
+  useEffect(() => {
+    localStorage.setItem("chatHistory", JSON.stringify(messages));
+    if (scrollRef.current) {
+      scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+    }
+  }, [messages, isTyping]);
 
   const sendMessage = async () => {
     const trimmed = input.trim();
     if (!trimmed) return;
 
-    const newMsg = { from: "user", text: trimmed };
+    const newMsg = {
+      from: "user",
+      name: userName,
+      text: trimmed,
+      timestamp: new Date()
+    };
     setMessages(prev => [...prev, newMsg]);
     setInput("");
+    setIsTyping(true);
 
     try {
+      const token = localStorage.getItem("token");
+
       const res = await fetch(url + "/api/chat", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          ...(token && { token })
+        },
         body: JSON.stringify({ message: trimmed })
       });
+
       const data = await res.json();
       const reply = data.reply || "Sorry, no reply.";
-      setMessages(prev => [...prev, { from: "bot", text: reply }]);
+
+      setTimeout(() => {
+        setMessages(prev => [
+          ...prev,
+          {
+            from: "bot",
+            name: botName,
+            text: reply,
+            timestamp: new Date()
+          }
+        ]);
+        setIsTyping(false);
+      }, 1200);
     } catch (err) {
-      setMessages(prev => [...prev, { from: "bot", text: "Chat service error. Try again later." }]);
+      setMessages(prev => [
+        ...prev,
+        {
+          from: "bot",
+          name: botName,
+          text: "⚠️ Chat service error. Try again later.",
+          timestamp: new Date()
+        }
+      ]);
+      setIsTyping(false);
       console.error("Chat error:", err);
     }
   };
@@ -43,46 +102,90 @@ export default function Chatbot() {
   };
 
   return (
-    <>
-      <div style={{ position: "fixed", right: 20, bottom: 20, zIndex: 9999 }}>
-        <button
-          onClick={() => setOpen(v => !v)}
-          style={{
-            background: "#0ea5a4", color: "white", border: "none",
-            padding: "10px 14px", borderRadius: 999
-          }}
-        >
-          {open ? "Close Chat" : "Chat"}
-        </button>
-        {open && (
-          <div style={{ width: 320, height: 420, background: "white", boxShadow: "0 6px 18px rgba(0,0,0,0.12)", marginTop: 8, borderRadius: 8, display: "flex", flexDirection: "column" }}>
-            <div ref={scrollRef} style={{ padding: 12, overflowY: "auto", flex: 1 }}>
-              {messages.map((m, i) => (
-                <div key={i} style={{ marginBottom: 8, textAlign: m.from === "bot" ? "left" : "right" }}>
-                  <div style={{
-                    display: "inline-block", padding: "8px 10px", borderRadius: 8,
-                    background: m.from === "bot" ? "#f1f5f9" : "#dcfce7"
-                  }}>
-                    <small style={{ color: "#111" }}>{m.text}</small>
+    <div className="chatbot-wrapper">
+      <button className="chatbot-toggle" onClick={() => setOpen(v => !v)}>
+        {open ? "Close Chat" : "Chat"}
+      </button>
+
+      {open && (
+        <div className="chatbot-window">
+          <div ref={scrollRef} className="chatbot-messages">
+            {messages.map((m, i) => (
+              <div
+                key={i}
+                className="chatbot-message-row"
+                style={{
+                  justifyContent: m.from === "bot" ? "flex-start" : "flex-end"
+                }}
+              >
+                {m.from === "bot" && <div style={{ marginRight: 8 }}>{avatarBot}</div>}
+                <div
+                  className={`chatbot-bubble ${
+                    m.from === "bot" ? "chatbot-bot" : "chatbot-user"
+                  }`}
+                >
+                  <strong style={{ fontSize: "12px", color: "#444" }}>
+                    {m.name}
+                  </strong>
+                  <div style={{ marginTop: 4 }}>
+                    {m.text.split("\n").map((line, idx) => (
+                      <div key={idx}><small>{line}</small></div>
+                    ))}
+                  </div>
+                  <div className="chatbot-timestamp">
+                    {new Date(m.timestamp).toLocaleTimeString([], {
+                      hour: "2-digit",
+                      minute: "2-digit"
+                    })}
                   </div>
                 </div>
-              ))}
-            </div>
-            <div style={{ display: "flex", padding: 8, borderTop: "1px solid #eee" }}>
-              <input
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={onKeyPress}
-                placeholder="Type a message..."
-                style={{ flex: 1, padding: 8, borderRadius: 6, border: "1px solid #ddd" }}
-              />
-              <button onClick={sendMessage} style={{ marginLeft: 8, padding: "8px 12px", borderRadius: 6, background: "#06b6d4", color: "white", border: "none" }}>
-                Send
-              </button>
-            </div>
+                {m.from === "user" && <div style={{ marginLeft: 8 }}>{avatarUser}</div>}
+              </div>
+            ))}
+
+            {isTyping && (
+              <div className="chatbot-message-row" style={{ justifyContent: "flex-start" }}>
+                <div className="chatbot-bubble chatbot-bot">
+                  <strong style={{ fontSize: "12px", color: "#444" }}>{botName}</strong>
+                  <div style={{ marginTop: 4 }}>
+                    Bot is typing<span className="typing-dots">...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {!isTyping && (
+              <div className="chatbot-quick-replies">
+                {quickReplies.map((text, idx) => (
+                  <button
+                    key={idx}
+                    className="chatbot-quick-button"
+                    onClick={() => {
+                      setInput(text);
+                      sendMessage();
+                    }}
+                  >
+                    {text}
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
-        )}
-      </div>
-    </>
+
+          <div className="chatbot-input-area">
+            <input
+              className="chatbot-input"
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyDown={onKeyPress}
+              placeholder="Type a message..."
+            />
+            <button className="chatbot-send" onClick={sendMessage}>
+              Send
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 }
