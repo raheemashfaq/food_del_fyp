@@ -7,11 +7,14 @@ import { formatPKR } from '../../utils/format';
 
 const PlaceOrder = () => {
   const { getTotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext);
+  const navigate = useNavigate();
 
   const [data, setData] = useState({
     firstName: "", lastName: "", email: "", street: "",
     city: "", state: "", zipcode: "", country: "", phone: ""
   });
+
+  const [paymentMethod, setPaymentMethod] = useState("Stripe"); // 🆕 Payment toggle
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -31,15 +34,20 @@ const PlaceOrder = () => {
       let orderData = {
         address: data,
         items: orderItems,
-        amount: getTotalCartAmount() + 200, // Rs 200 delivery
+        amount: getTotalCartAmount() + 200,
+        paymentMethod // 🆕 Include payment method
       };
 
-      let response = await axios.post(`${url}/api/order/place`, orderData, {
+      const response = await axios.post(`${url}/api/order/place`, orderData, {
         headers: { token }
       });
 
       if (response.data.success) {
-        window.location.replace(response.data.session_url);
+        if (paymentMethod === "Stripe") {
+          window.location.replace(response.data.session_url);
+        } else {
+          navigate(`/verify?success=true&orderId=${response.data.orderId}`);
+        }
       } else {
         alert("Order placement failed. Please try again.");
       }
@@ -48,8 +56,6 @@ const PlaceOrder = () => {
       alert("An error occurred while placing the order. Please try again later.");
     }
   };
-
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (!token || getTotalCartAmount() === 0) {
@@ -76,6 +82,31 @@ const PlaceOrder = () => {
           <input required name='country' onChange={onChangeHandler} value={data.country} type="text" placeholder='Country'/>
         </div>
         <input required name='phone' onChange={onChangeHandler} value={data.phone} type='text' placeholder='Phone' />
+
+        {/* 🆕 Payment Method Toggle */}
+        <div className="payment-method">
+          <p className="title">Select Payment Method</p>
+          <label>
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="Stripe"
+              checked={paymentMethod === "Stripe"}
+              onChange={() => setPaymentMethod("Stripe")}
+            />
+            Pay Online (Stripe)
+          </label>
+          <label>
+            <input
+              type="radio"
+              name="paymentMethod"
+              value="CashOnDelivery"
+              checked={paymentMethod === "CashOnDelivery"}
+              onChange={() => setPaymentMethod("CashOnDelivery")}
+            />
+            Cash on Delivery
+          </label>
+        </div>
       </div>
 
       <div className="place-order-right">
@@ -99,7 +130,9 @@ const PlaceOrder = () => {
                 : formatPKR(getTotalCartAmount() + 200)}
             </b>
           </div>
-          <button type='submit'>Proceed to Payment</button>
+          <button type='submit'>
+            {paymentMethod === "Stripe" ? "Proceed to Payment" : "Place COD Order"}
+          </button>
         </div>
       </div>
     </form>
