@@ -13,5 +13,6 @@ export const assets ={
     upload_area,
     parcel_icon
 }
+ const url = import.meta.env.VITE_BACKEND_URL;
 
-export const url = 'https://backend-food-delivery-xzjc.onrender.com'
+export default url
