@@ -35,11 +35,39 @@
     flex-direction: column;
     gap:20px;
 }
+
 .login-popup-inputs input{
     outline: none;
     border: 1px solid #c9c9c9;
     padding:10px;
     border-radius: 4px;
+}
+
+/* Password Input Container */
+.password-input-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.password-input-container input {
+    width: 100%;
+    padding-right: 40px; /* Make space for the eye icon */
+}
+
+.password-toggle-icon {
+    position: absolute;
+    right: 12px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #666;
+    user-select: none;
+    transition: color 0.3s ease;
+    z-index: 1;
+}
+
+.password-toggle-icon:hover {
+    color: tomato;
 }
 
 .login-popup-container button{
@@ -60,6 +88,27 @@
 .login-popup-condition input{
     margin-top:5px;
 }
+
+/* Forgot Password Link Styles */
+.forgot-password-link {
+    text-align: center;
+    margin: 10px 0;
+}
+
+.forgot-password-text {
+    color: tomato;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.forgot-password-text:hover {
+    color: #e55347;
+    text-decoration: none;
+}
+
 .login-popup p span{
     color: tomato;
     font-weight: 500;

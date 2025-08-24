@@ -10,6 +10,7 @@ import VerifyEmail from './Pages/VerifyEmail'
 import MyOrders from "./Pages/MyOrders/MyOrders"
 import Chatbot from './Components/Chatbot/Chatbot'
 import Verify from '../src/Pages/Verify/Verify'
+import ResetPassword from './Components/LoginPopup/ResetPassword'
 
 const App = () => {
 
@@ -29,8 +30,11 @@ const App = () => {
         <Route path='/verify/:token' element={<VerifyEmail/>}/>
         <Route path='/myorders' element={<MyOrders/>} />
         <Route path='/chat' element={<Chatbot />} />
+        <Route path='/reset-password/:token' element={<ResetPassword />} />
       </Routes>
       
+      {/* Persistent Chatbot - always available */}
+      <Chatbot />
     </div>
       <Footer/>
    </>

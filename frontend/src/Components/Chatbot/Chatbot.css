@@ -6,23 +6,84 @@
 }
 
 .chatbot-toggle {
-  background: #0ea5a4;
+  background: tomato;
   color: white;
   border: none;
-  padding: 10px 14px;
-  border-radius: 999px;
+  padding: 12px 16px;
+  border-radius: 25px;
   cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 4px 12px rgba(255, 99, 71, 0.3);
+  transition: all 0.3s ease;
+  font-size: 14px;
+  min-width: 80px;
+}
+
+.chatbot-toggle:hover {
+  background: #e55347;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 99, 71, 0.4);
 }
 
 .chatbot-window {
-  width: 320px;
-  height: 480px;
+  width: 340px;
+  height: 520px;
   background: white;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   margin-top: 8px;
-  border-radius: 8px;
+  border-radius: 12px;
   display: flex;
   flex-direction: column;
+  border: 1px solid #e5e7eb;
+  position: relative;
+}
+
+/* Chat Header Styles */
+.chatbot-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: tomato;
+  color: white;
+  border-radius: 12px 12px 0 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.chatbot-header-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chatbot-avatar {
+  font-size: 18px;
+}
+
+.chatbot-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.chatbot-close-btn {
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.chatbot-close-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
 }
 
 .chatbot-messages {
@@ -75,10 +136,17 @@
   margin-left: 8px;
   padding: 8px 12px;
   border-radius: 6px;
-  background: #06b6d4;
+  background: tomato;
   color: white;
   border: none;
   cursor: pointer;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.chatbot-send:hover {
+  background: #e55347;
+  transform: translateY(-1px);
 }
 
 .typing-dots::after {
@@ -97,9 +165,10 @@
 
 .chatbot-quick-replies {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
   margin-top: 12px;
+  padding: 0 4px;
 }
 
 .chatbot-quick-button {
@@ -109,4 +178,325 @@
   background: #f9fafb;
   cursor: pointer;
   font-size: 12px;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.chatbot-quick-button:hover {
+  background: #e5e7eb;
+  border-color: #0ea5a4;
+  transform: translateY(-1px);
+}
+
+/* Order Guidance Styles */
+.order-guidance {
+  margin-top: 12px;
+  padding: 0 4px;
+}
+
+.guidance-tip {
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+  padding: 8px 12px;
+  font-size: 11px;
+  color: #92400e;
+  text-align: center;
+  line-height: 1.4;
+}
+
+.guidance-tip strong {
+  color: #78350f;
+}
+
+/* Location Picker Styles */
+.location-picker {
+  border-top: 1px solid #eee;
+  padding: 12px;
+  background: #f8fafc;
+}
+
+.location-picker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.location-picker-header h4 {
+  margin: 0;
+  font-size: 14px;
+  color: #374151;
+}
+
+.close-location-picker {
+  background: tomato;
+  border: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: white;
+  padding: 4px 8px;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.close-location-picker:hover {
+  background: #e55347;
+  transform: scale(1.1);
+}
+
+.location-options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.location-option-btn {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #d1d5db;
+  background: white;
+  cursor: pointer;
+  font-size: 13px;
+  color: #374151;
+  transition: all 0.2s;
+}
+
+.location-option-btn:hover {
+  background: #f3f4f6;
+  border-color: #9ca3af;
+}
+
+.location-manual-select p {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.simple-map {
+  width: 100%;
+  height: 120px;
+  border: 2px dashed #d1d5db;
+  border-radius: 6px;
+  cursor: crosshair;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+  transition: all 0.2s;
+}
+
+.simple-map:hover {
+  border-color: #0ea5a4;
+  background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+}
+
+.map-placeholder {
+  text-align: center;
+  font-size: 12px;
+  color: #6b7280;
+  padding: 20px;
+  line-height: 1.4;
+}
+
+/* Saved Addresses Styles */
+.saved-addresses {
+  margin-top: 15px;
+  padding: 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f9fafb;
+}
+
+.saved-addresses h5 {
+  margin: 0 0 10px 0;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.address-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.saved-address-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  background: white;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  transition: all 0.2s;
+}
+
+.saved-address-item:hover {
+  border-color: #0ea5a4;
+  box-shadow: 0 2px 4px rgba(14, 165, 164, 0.1);
+}
+
+.address-info {
+  flex: 1;
+}
+
+.address-info strong {
+  display: block;
+  font-size: 13px;
+  color: #111827;
+  font-weight: 600;
+}
+
+.address-info small {
+  display: block;
+  font-size: 11px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.select-address-btn {
+  padding: 6px 12px;
+  background: #0ea5a4;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.select-address-btn:hover {
+  background: #0891b2;
+  transform: translateY(-1px);
+}
+
+/* Address Form Styles */
+.address-form {
+  margin-top: 15px;
+  padding: 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  background: #f8fafc;
+}
+
+.address-form h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  color: #374151;
+  font-weight: 600;
+}
+
+.address-input {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-bottom: 8px;
+  box-sizing: border-box;
+}
+
+.address-textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 13px;
+  margin-bottom: 12px;
+  resize: vertical;
+  font-family: inherit;
+  box-sizing: border-box;
+}
+
+.address-input:focus,
+.address-textarea:focus {
+  outline: none;
+  border-color: #0ea5a4;
+  box-shadow: 0 0 0 2px rgba(14, 165, 164, 0.1);
+}
+
+.address-form-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.save-address-btn {
+  flex: 1;
+  padding: 10px;
+  background: #16a34a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.save-address-btn:hover:not(:disabled) {
+  background: #15803d;
+  transform: translateY(-1px);
+}
+
+.save-address-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.cancel-address-btn {
+  flex: 1;
+  padding: 10px;
+  background: #6b7280;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s;
+}
+
+.cancel-address-btn:hover {
+  background: #4b5563;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design for Laptop and Smaller Screens */
+/* Height constraints removed to maintain full size */
+
+@media (max-width: 768px) {
+  .chatbot-wrapper {
+    right: 10px;
+    bottom: 10px;
+  }
+  
+  .chatbot-window {
+    width: 300px;
+    height: 400px;
+  }
+}
+
+@media (max-width: 480px) {
+  .chatbot-wrapper {
+    right: 5px;
+    bottom: 5px;
+  }
+  
+  .chatbot-window {
+    width: 280px;
+    height: 350px;
+  }
+  
+  .chatbot-toggle {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
 }

@@ -1,21 +1,29 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { GoogleLogin } from '@react-oauth/google';
 import './LoginPopup.css';
 import { assets } from '../../assets/assets';
 import { StoreContext } from '../../Context/StoreContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';   // ✅ Import useNavigate
+import ForgotPassword from './ForgotPassword';
 
 const LoginPopup = ({ setShowLogin }) => {
   const { url, setToken } = useContext(StoreContext);
   const navigate = useNavigate();   // ✅ Initialize navigation
 
   const [currState, setCurrState] = useState('Login');
+  const [showForgotPassword, setShowForgotPassword] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [data, setData] = useState({
     name: '',
     email: '',
     password: '',
   });
+
+  // Reset forgot password state when component mounts to avoid Google OAuth conflicts
+  useEffect(() => {
+    setShowForgotPassword(false);
+  }, []);
 
   const onChangeHandler = (event) => {
     const { name, value } = event.target;
@@ -84,72 +92,108 @@ const LoginPopup = ({ setShowLogin }) => {
 
   return (
     <div className="login-popup">
-      <form onSubmit={onLogin} className="login-popup-container">
-        <div className="login-popup-title">
-          <h2>{currState}</h2>
-          <img
-            onClick={() => setShowLogin(false)}
-            src={assets.cross_icon}
-            alt="Close"
-          />
-        </div>
-        <div className="login-popup-inputs">
-          {currState !== 'Login' && (
+      {!showForgotPassword ? (
+        <form onSubmit={onLogin} className="login-popup-container">
+          <div className="login-popup-title">
+            <h2>{currState}</h2>
+            <img
+              onClick={() => setShowLogin(false)}
+              src={assets.cross_icon}
+              alt="Close"
+            />
+          </div>
+          <div className="login-popup-inputs">
+            {currState !== 'Login' && (
+              <input
+                name="name"
+                onChange={onChangeHandler}
+                value={data.name}
+                type="text"
+                placeholder="Your name"
+                required
+              />
+            )}
             <input
-              name="name"
+              name="email"
               onChange={onChangeHandler}
-              value={data.name}
-              type="text"
-              placeholder="Your name"
+              value={data.email}
+              type="email"
+              placeholder="Your email"
               required
             />
+            <div className="password-input-container">
+              <input
+                name="password"
+                onChange={onChangeHandler}
+                value={data.password}
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                required
+              />
+              <span 
+                className="password-toggle-icon"
+                onClick={() => setShowPassword(!showPassword)}
+                title={showPassword ? "Hide password" : "Show password"}
+              >
+                {showPassword ? "👁️" : "🙈"}
+              </span>
+            </div>
+          </div>
+          <button type="submit">
+            {currState === 'Sign Up' ? 'Create account' : 'Login'}
+          </button>
+
+          {currState === 'Login' && (
+            <div style={{ margin: '16px 0', textAlign: 'center' }}>
+              <GoogleLogin
+                key={`google-login-${currState}`}
+                onSuccess={handleGoogleLoginSuccess}
+                onError={handleGoogleLoginError}
+              />
+            </div>
           )}
-          <input
-            name="email"
-            onChange={onChangeHandler}
-            value={data.email}
-            type="email"
-            placeholder="Your email"
-            required
-          />
-          <input
-            name="password"
-            onChange={onChangeHandler}
-            value={data.password}
-            type="password"
-            placeholder="Password"
-            required
-          />
-        </div>
-        <button type="submit">
-          {currState === 'Sign Up' ? 'Create account' : 'Login'}
-        </button>
 
-        <div style={{ margin: '16px 0', textAlign: 'center' }}>
-          <GoogleLogin
-            onSuccess={handleGoogleLoginSuccess}
-            onError={handleGoogleLoginError}
-          />
-        </div>
-
-        <div className="login-popup-condition">
-          <label>
-            <input type="checkbox" required />
-            By continuing, I agree to the terms of use & privacy policy
-          </label>
-        </div>
-        {currState === 'Login' ? (
-          <p>
-            Create a New Account?{' '}
-            <span onClick={() => setCurrState('Sign Up')}>Click here</span>
-          </p>
-        ) : (
-          <p>
-            Already have an account?{' '}
-            <span onClick={() => setCurrState('Login')}>Login here</span>
-          </p>
-        )}
-      </form>
+          <div className="login-popup-condition">
+            <label>
+              <input type="checkbox" required />
+              By continuing, I agree to the terms of use & privacy policy
+            </label>
+          </div>
+          
+          {/* Forgot Password Link - only show in Login mode */}
+          {currState === 'Login' && (
+            <div className="forgot-password-link">
+              <span 
+                onClick={() => {
+                  setShowForgotPassword(true);
+                  // Don't close the login popup, just show forgot password
+                }}
+                className="forgot-password-text"
+              >
+                Forgot Password?
+              </span>
+            </div>
+          )}
+          
+          {currState === 'Login' ? (
+            <p>
+              Create a New Account?{' '}
+              <span onClick={() => setCurrState('Sign Up')}>Click here</span>
+            </p>
+          ) : (
+            <p>
+              Already have an account?{' '}
+              <span onClick={() => setCurrState('Login')}>Login here</span>
+            </p>
+          )}
+        </form>
+      ) : (
+        /* Show ForgotPassword component when needed */
+        <ForgotPassword 
+          setShowLogin={setShowLogin}
+          setShowForgotPassword={setShowForgotPassword}
+        />
+      )}
     </div>
   );
 };

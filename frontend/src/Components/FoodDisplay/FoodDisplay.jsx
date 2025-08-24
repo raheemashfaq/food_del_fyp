@@ -2,7 +2,8 @@ import React, { useContext } from "react";
 import "./FoodDisplay.css";
 import { StoreContext } from "../../Context/StoreContext";
 import FoodItem from "../FoodItem/FoodItem";
-import Chatbot from "../Chatbot/Chatbot"; // 👈 Add this
+import Chatbot from "../Chatbot/Chatbot";
+import LocationMap from "../LocationMap/LocationMap";
 
 const FoodDisplay = ({ category }) => {
   const { food_list } = useContext(StoreContext);
@@ -28,7 +29,16 @@ const FoodDisplay = ({ category }) => {
         })}
       </div>
 
-      {/* 👇 Add chatbot here */}
+      {/* Location Map Section */}
+      <LocationMap 
+        latitude={31.582045}
+        longitude={74.329376}
+        locationName="Lahore, Pakistan"
+        popupText="🍕 Fast Food Delivery Available Here!"
+        zoom={13}
+      />
+
+      {/* Chatbot */}
       <Chatbot />
     </div>
   );

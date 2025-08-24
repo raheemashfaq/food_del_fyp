@@ -18,9 +18,10 @@ const userSchema = new mongoose.Schema({
         type: Object,
         default: {}
     },
-verified: { type: Boolean, default: false },
-verificationToken: { type: String, default: "" }
-
+    verified: { type: Boolean, default: false },
+    verificationToken: { type: String, default: "" },
+    resetPasswordToken: { type: String, default: "" },
+    resetPasswordExpires: { type: Date }
 }, { minimize: false });
 
 const userModel = mongoose.models.user || mongoose.model("user", userSchema);

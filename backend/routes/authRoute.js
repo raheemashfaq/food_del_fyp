@@ -8,7 +8,7 @@ import User from "../models/userModel.js";
 
 const router = express.Router();
 const client = new OAuth2Client(
-  "78746459454-c6428b4dgmpker8omk3uf1jalst5vnua.apps.googleusercontent.com"
+  process.env.GOOGLE_CLIENT_ID || "78746459454-c6428b4dgmpker8omk3uf1jalst5vnua.apps.googleusercontent.com"
 );
 
 // Helper: Generate JWT
@@ -116,8 +116,7 @@ router.post("/google", async (req, res) => {
   try {
     const ticket = await client.verifyIdToken({
       idToken: token,
-      audience:
-        "78746459454-c6428b4dgmpker8omk3uf1jalst5vnua.apps.googleusercontent.com",
+      audience: process.env.GOOGLE_CLIENT_ID || "78746459454-c6428b4dgmpker8omk3uf1jalst5vnua.apps.googleusercontent.com",
     });
 
     const payload = ticket.getPayload();
