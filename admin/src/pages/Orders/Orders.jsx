@@ -5,7 +5,7 @@ import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
 
 const Orders = () => {
-  const url = "http://localhost:5000";
+  const url = "http://localhost:4000";
   const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState("");
 

@@ -7,7 +7,7 @@ import axios from 'axios';
 
 const Add = () => {
     // {url}
-    const url = "http://localhost:5000"
+    const url = "http://localhost:4000"
     const [image , setImage] = useState(false);
     const [data,setData] = useState({
         name:"",

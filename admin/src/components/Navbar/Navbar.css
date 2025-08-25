@@ -7,8 +7,32 @@
 .navbar .logo{
     width:max(10%, 80px);
 }
+
+.navbar-right {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
 .navbar .profile{
     width:50px;
     border: 1px solid tomato;
     border-radius: 50%;
+}
+
+.logout-btn {
+    padding: 8px 16px;
+    background-color: #ff6b47;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #ff4757;
+    transform: translateY(-1px);
 }

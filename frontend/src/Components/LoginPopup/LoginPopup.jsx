@@ -36,17 +36,22 @@ const LoginPopup = ({ setShowLogin }) => {
       currState === 'Login' ? '/api/user/login' : '/api/user/register';
     const newUrl = `${url}${endpoint}`;
 
+    console.log('Login attempt:', { url: newUrl, data: { email: data.email, password: '***' } });
+
     try {
       const response = await axios.post(newUrl, data);
+      console.log('Login response:', response.data);
+      
       if (currState === 'Login') {
         if (response.data.success && response.data.token) {
           setToken(response.data.token);
           localStorage.setItem('token', response.data.token);
           setShowLogin(false);
-
+          console.log('Login successful, token stored');
           navigate('/');   // ✅ Redirect after login
         } else {
-          alert(response.data.message);
+          console.error('Login failed:', response.data.message);
+          alert(response.data.message || 'Login failed');
         }
       } else {
         if (response.data.success) {
@@ -56,33 +61,62 @@ const LoginPopup = ({ setShowLogin }) => {
           );
           setShowLogin(false);
         } else {
-          alert(response.data.message);
+          console.error('Registration failed:', response.data.message);
+          alert(response.data.message || 'Registration failed');
         }
       }
     } catch (error) {
-      console.error('An error occurred during login:', error);
-      alert('An error occurred. Please try again later.');
+      console.error('Login/Register error details:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data,
+        url: newUrl
+      });
+      
+      if (error.code === 'ERR_NETWORK') {
+        alert('Cannot connect to server. Please make sure the backend is running on port 4000.');
+      } else if (error.response?.status === 404) {
+        alert('Login endpoint not found. Please check the backend configuration.');
+      } else {
+        alert(`Error: ${error.response?.data?.message || error.message}`);
+      }
     }
   };
 
   const handleGoogleLoginSuccess = async (credentialResponse) => {
+    console.log('Google login attempt:', { url: `${url}/api/user/auth/google` });
+    
     try {
       const response = await axios.post(`${url}/api/user/auth/google`, {
         token: credentialResponse.credential,
       });
+      
+      console.log('Google login response:', response.data);
 
       if (response.data.success) {
         setToken(response.data.token);
         localStorage.setItem('token', response.data.token);
         setShowLogin(false);
-
+        console.log('Google login successful, token stored');
         navigate('/');   // ✅ Redirect after Google login
       } else {
-        alert(response.data.message);
+        console.error('Google login failed:', response.data.message);
+        alert(response.data.message || 'Google login failed');
       }
-    } catch (err) {
-      console.error(err);
-      alert('Google login failed');
+    } catch (error) {
+      console.error('Google login error details:', {
+        message: error.message,
+        status: error.response?.status,
+        statusText: error.response?.statusText,
+        data: error.response?.data
+      });
+      
+      if (error.code === 'ERR_NETWORK') {
+        alert('Cannot connect to server. Please make sure the backend is running on port 4000.');
+      } else {
+        alert(`Google login error: ${error.response?.data?.message || error.message}`);
+      }
     }
   };
 
