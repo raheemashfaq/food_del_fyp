@@ -67,7 +67,7 @@ const AdminResetPassword = () => {
         setMessageType('success');
         
         setTimeout(() => {
-          navigate('/admin/login');
+          navigate('/');
         }, 2000);
       } else {
         setMessage(response.data.message || 'Failed to reset password');
@@ -154,7 +154,7 @@ const AdminResetPassword = () => {
         <div className="admin-reset-password-footer">
           <p>
             Remember your password?{' '}
-            <a href="/admin/login" className="back-to-login-link">
+            <a href="/" className="back-to-login-link">
               Back to Login
             </a>
           </p>
