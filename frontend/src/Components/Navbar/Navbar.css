@@ -63,6 +63,79 @@
     display: flex;
     align-items: center;
     gap: 40px;
+    position: relative;
+}
+
+/* Search Container Styles */
+.search-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.search-icon {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.search-icon:hover {
+    transform: scale(1.1);
+}
+
+.search-form {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    display: flex;
+    background: white;
+    border: 2px solid #49557e;
+    border-radius: 25px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 300px;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.search-input {
+    border: none;
+    outline: none;
+    padding: 12px 20px;
+    font-size: 16px;
+    border-radius: 25px 0 0 25px;
+    flex: 1;
+    color: #49557e;
+}
+
+.search-input::placeholder {
+    color: #aaa;
+}
+
+.search-submit-btn {
+    background: #49557e;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 0 25px 25px 0;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: background 0.3s ease;
+}
+
+.search-submit-btn:hover {
+    background: #3a4464;
 }
 
 .navbar button{
@@ -253,8 +326,29 @@
         font-size: 14px;
     }
     
+    /* Adjust search form for mobile */
+    .search-form {
+        min-width: 250px;
+        right: -20px;
+    }
+    
+    .search-input {
+        font-size: 14px;
+        padding: 10px 15px;
+    }
+    
+    .search-submit-btn {
+        padding: 10px 15px;
+        font-size: 12px;
+    }
+    
     /* Hide search icon on very small screens */
     .navbar-right .search-icon {
+        display: none;
+    }
+    
+    /* Hide search form on mobile */
+    .search-form {
         display: none;
     }
 }
