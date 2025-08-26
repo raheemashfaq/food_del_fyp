@@ -11,6 +11,8 @@ const StoreContextProvider = (props) =>{
     const [token,setToken] = useState("")
     // Data carry from database now
     const [food_list,setFoodList] = useState([]);
+    // Search functionality
+    const [searchTerm, setSearchTerm] = useState("");
 
     const addToCart = async (itemId) => {
         if(!cartItems[itemId]) {
@@ -79,7 +81,9 @@ const StoreContextProvider = (props) =>{
         getTotalCartAmount,
         url,
         token,
-        setToken
+        setToken,
+        searchTerm,
+        setSearchTerm
     }
 
     return (

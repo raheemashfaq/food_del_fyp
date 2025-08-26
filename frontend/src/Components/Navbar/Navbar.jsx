@@ -1,4 +1,4 @@
-import React,{useState,useContext} from 'react'
+import React,{useState,useContext, useEffect, useRef} from 'react'
 import { GoogleLogin } from '@react-oauth/google';
 import axios from 'axios';
 import "./Navbar.css"
@@ -12,7 +12,9 @@ const Navbar = ({setShowLogin}) => {
   const navigate = useNavigate();
   const [menu,setMenu] = useState("Home");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const {getTotalCartAmount,token, setToken} = useContext(StoreContext)
+  const [showSearchInput, setShowSearchInput] = useState(false);
+  const searchContainerRef = useRef(null);
+  const {getTotalCartAmount,token, setToken, searchTerm, setSearchTerm} = useContext(StoreContext)
   const logout = () => {
     localStorage.removeItem("token");
     setToken("");
@@ -27,6 +29,48 @@ const Navbar = ({setShowLogin}) => {
     setMenu(menuItem);
     setMobileMenuOpen(false); // Close mobile menu when item is clicked
   }
+
+  const handleSearchClick = () => {
+    setShowSearchInput(!showSearchInput);
+  }
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  }
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    // Navigate to home page with search results
+    if (searchTerm.trim()) {
+      navigate('/');
+      // Scroll to food display section
+      setTimeout(() => {
+        const foodDisplayElement = document.getElementById('food-display');
+        if (foodDisplayElement) {
+          foodDisplayElement.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+    }
+  }
+
+  // Close search input when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (searchContainerRef.current && !searchContainerRef.current.contains(event.target)) {
+        setShowSearchInput(false);
+      }
+    };
+
+    // Add event listener when search input is open
+    if (showSearchInput) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    // Cleanup event listener
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [showSearchInput]);
   
   return (
     <div className="navbar">
@@ -52,7 +96,29 @@ const Navbar = ({setShowLogin}) => {
         <li onClick={()=>setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
       </ul> */}
       <div className="navbar-right">
-        <img src={assets.search_icon} alt="" className="search-icon"/>
+        <div className="search-container" ref={searchContainerRef}>
+          <img 
+            src={assets.search_icon} 
+            alt="" 
+            className="search-icon"
+            onClick={handleSearchClick}
+          />
+          {showSearchInput && (
+            <form className="search-form" onSubmit={handleSearchSubmit}>
+              <input
+                type="text"
+                placeholder="Search for food..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="search-input"
+                autoFocus
+              />
+              <button type="submit" className="search-submit-btn">
+                Search
+              </button>
+            </form>
+          )}
+        </div>
         <div className="navbar-search-icon">
             <Link to="/cart"><img src={assets.basket_icon} alt=""/></Link>
             <div className={getTotalCartAmount()===0?"":"dot"}></div>
