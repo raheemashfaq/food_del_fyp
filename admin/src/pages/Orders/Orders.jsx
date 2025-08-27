@@ -8,18 +8,7 @@ const Orders = () => {
   const url = "http://localhost:4000";
   const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState("");
-const fetchAllOrders = async () => {
-    try {
-      const response = await axios.get(`${url}/api/order/list`);
-      if (response.data.success) {
-        setOrders(response.data.data);
-      } else {
-        toast.error("Error fetching orders");
-      }
-    } catch (error) {
-      toast.error("Server error");
-    }
-  };
+
   const fetchAllOrders = async () => {
     try {
       const response = await axios.get(`${url}/api/order/list`);
