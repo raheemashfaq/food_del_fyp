@@ -8,7 +8,18 @@ import { formatPKR } from '../../utils/format';
 const MyOrders = () => {
   const [data, setData] = useState([]);
   const { url, token } = useContext(StoreContext);
-
+const fetchAllOrders = async () => {
+    try {
+      const response = await axios.get(${url}/api/order/list);
+      if (response.data.success) {
+        setOrders(response.data.data);
+      } else {
+        toast.error("Error fetching orders");
+      }
+    } catch (error) {
+      toast.error("Server error");
+    }
+  };
   const fetchOrders = async () => {
     try {
       const response = await axios.post(`${url}/api/order/userorders`, {}, {
