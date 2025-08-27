@@ -4,9 +4,24 @@ import './Cart.css';
 import { StoreContext } from '../../Context/StoreContext';
 import { formatPKR } from '../../utils/format';
 
-const Cart = () => {
-  const { cartItems, food_list, removeFromCart, getTotalCartAmount, url } = useContext(StoreContext);
+const Cart = ({ setShowLogin }) => {
+  const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, token } = useContext(StoreContext);
   const navigate = useNavigate();
+
+  const handleProceedToCheckout = () => {
+    if (!token) {
+      alert("Please login first before proceeding to checkout!");
+      setShowLogin(true);
+      return;
+    }
+    
+    if (getTotalCartAmount() === 0) {
+      alert("Your cart is empty! Please add some items before checkout.");
+      return;
+    }
+    
+    navigate('/order');
+  };
 
   return (
     <div className="cart">
@@ -64,7 +79,12 @@ const Cart = () => {
               </b>
             </div>
           </div>
-          <button onClick={() => navigate('/order')}>Proceed to Checkout</button>
+          <button onClick={handleProceedToCheckout}>Proceed to Checkout</button>
+          {!token && (
+            <p style={{color: '#ff6347', fontSize: '14px', marginTop: '10px', textAlign: 'center'}}>
+              * Please login to proceed with checkout
+            </p>
+          )}
         </div>
 
         <div className="cart-promocode">
