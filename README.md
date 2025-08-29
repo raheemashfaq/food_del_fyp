@@ -1,5 +1,14 @@
 This is a MERN stack project that allows users to browse and order food online.
 
+## 🚨 SECURITY NOTICE
+**IMPORTANT**: This project uses environment variables for sensitive credentials. 
+- Never commit `.env` files to version control
+- Use `.env.template` files as reference for required variables
+- Rotate credentials immediately if exposed
+- See `SECURITY_INCIDENT_RESPONSE.md` for detailed security guidelines
+
+## Features
+
 The frontend is built using React.js (with Vite).
 
 The backend is powered by Node.js and Express.js.
