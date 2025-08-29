@@ -10,7 +10,7 @@ const MyOrders = () => {
   const { url, token } = useContext(StoreContext);
 const fetchAllOrders = async () => {
     try {
-      const response = await axios.get(${url}/api/order/list);
+      const response = await axios.get(`${url}/api/order/list`);
       if (response.data.success) {
         setOrders(response.data.data);
       } else {
