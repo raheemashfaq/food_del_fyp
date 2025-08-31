@@ -33,7 +33,6 @@ async function testAdmin() {
 // Test the reset password endpoint
 async function testResetPasswordEndpoint() {
   try {
-    // This should return an error for invalid token, but endpoint should exist
     const response = await axios.post(`${backendUrl}/api/admin/reset-password/invalid-token`, {
       password: 'testpassword123'
     });
