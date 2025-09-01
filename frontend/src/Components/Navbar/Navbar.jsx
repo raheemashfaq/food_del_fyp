@@ -86,15 +86,8 @@ const Navbar = ({setShowLogin}) => {
       <ul className={`navbar-menu ${mobileMenuOpen ? 'mobile-open' : ''}`}>
         <Link to='/' onClick={()=>handleMenuClick("Home")} className={menu === "Home" ? "active" : ""}>Home</Link>
         <a href='#explore-menu' onClick={()=>handleMenuClick("Menu")} className={menu === "Menu" ? "active" : ""}>Menu</a>
-        <a href='#app-download' onClick={()=>handleMenuClick("Mobile-app")} className={menu === "Mobile-app" ? "active" : ""}>Mobile-app</a>
         <a href='#footer' onClick={()=>handleMenuClick("Contact us")} className={menu === "Contact us" ? "active" : ""}>Contact us</a>
       </ul>
-      {/* <ul className="navbar-menu">
-        <li onClick={()=>setMenu("home")} className={menu === "home" ? "active" : ""}>home</li>
-        <li onClick={()=>setMenu("menu")} className={menu === "menu" ? "active" : ""}>menu</li>
-        <li onClick={()=>setMenu("mobile-app")} className={menu === "mobile-app" ? "active" : ""}>mobile-app</li>
-        <li onClick={()=>setMenu("contact us")} className={menu === "contact us" ? "active" : ""}>contact us</li>
-      </ul> */}
       <div className="navbar-right">
         <div className="search-container" ref={searchContainerRef}>
           <img 

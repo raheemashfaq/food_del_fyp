@@ -50,8 +50,39 @@ const registerUser = async (req, res) => {
     if (!validator.isEmail(email)) {
       return res.json({ success: false, message: "Please enter a valid email" });
     }
+    
+    // Enhanced password validation
     if (password.length < 8) {
-      return res.json({ success: false, message: "Please enter a stronger password" });
+      return res.json({ success: false, message: "Password must be at least 8 characters long" });
+    }
+    
+    // Check for weak passwords
+    if (/^0+$/.test(password)) {
+      return res.json({ success: false, message: "Password cannot contain only zeros. Please create a stronger password." });
+    }
+    
+    if (/^(.)\1*$/.test(password)) {
+      return res.json({ success: false, message: "Password cannot contain only repeated characters. Please create a stronger password." });
+    }
+    
+    // Check for common weak patterns
+    const weakPatterns = [
+      /^12345678/,
+      /^password/i,
+      /^qwerty/i,
+      /^abc123/i,
+      /^123abc/i
+    ];
+    
+    for (const pattern of weakPatterns) {
+      if (pattern.test(password)) {
+        return res.json({ success: false, message: "Password is too common. Please choose a stronger password." });
+      }
+    }
+    
+    // Require at least one letter and one number for stronger security
+    if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
+      return res.json({ success: false, message: "Password must contain at least one letter and one number" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -77,7 +108,9 @@ const registerUser = async (req, res) => {
       },
     });
 
-    const verifyUrl = `http://localhost:5173/verify/${verificationToken}`;
+    // Use FRONTEND_URL environment variable instead of hardcoded URL
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const verifyUrl = `${frontendUrl}/verify/${verificationToken}`;
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
@@ -180,7 +213,9 @@ const forgotPassword = async (req, res) => {
       },
     });
 
-    const resetUrl = `http://localhost:5173/reset-password/${resetToken}`;
+    // Use FRONTEND_URL environment variable instead of hardcoded URL
+    const frontendUrl = process.env.FRONTEND_URL || "http://localhost:5173";
+    const resetUrl = `${frontendUrl}/reset-password/${resetToken}`;
 
     // Send email
     await transporter.sendMail({
@@ -219,8 +254,38 @@ const resetPassword = async (req, res) => {
   const { password } = req.body;
   
   try {
+    // Enhanced password validation
     if (password.length < 8) {
       return res.json({ success: false, message: "Password must be at least 8 characters long" });
+    }
+    
+    // Check for weak passwords
+    if (/^0+$/.test(password)) {
+      return res.json({ success: false, message: "Password cannot contain only zeros. Please create a stronger password." });
+    }
+    
+    if (/^(.)\1*$/.test(password)) {
+      return res.json({ success: false, message: "Password cannot contain only repeated characters. Please create a stronger password." });
+    }
+    
+    // Check for common weak patterns
+    const weakPatterns = [
+      /^12345678/,
+      /^password/i,
+      /^qwerty/i,
+      /^abc123/i,
+      /^123abc/i
+    ];
+    
+    for (const pattern of weakPatterns) {
+      if (pattern.test(password)) {
+        return res.json({ success: false, message: "Password is too common. Please choose a stronger password." });
+      }
+    }
+    
+    // Require at least one letter and one number for stronger security
+    if (!/(?=.*[a-zA-Z])(?=.*\d)/.test(password)) {
+      return res.json({ success: false, message: "Password must contain at least one letter and one number" });
     }
 
     // Find user with valid reset token

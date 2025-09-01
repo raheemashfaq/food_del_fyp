@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Cart.css';
 import { StoreContext } from '../../Context/StoreContext';
 import { formatPKR } from '../../utils/format';
+import { toast } from 'react-toastify';
 
 const Cart = ({ setShowLogin }) => {
   const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, token } = useContext(StoreContext);
@@ -10,13 +11,19 @@ const Cart = ({ setShowLogin }) => {
 
   const handleProceedToCheckout = () => {
     if (!token) {
-      alert("Please login first before proceeding to checkout!");
+      toast.warning("Please login first before proceeding to checkout!", {
+        position: "top-center",
+        autoClose: 4000,
+      });
       setShowLogin(true);
       return;
     }
     
     if (getTotalCartAmount() === 0) {
-      alert("Your cart is empty! Please add some items before checkout.");
+      toast.error("Your cart is empty! Please add some items before checkout.", {
+        position: "top-center",
+        autoClose: 3000,
+      });
       return;
     }
     
@@ -37,7 +44,8 @@ const Cart = ({ setShowLogin }) => {
         <br />
         <hr />
         {food_list.map((item) => {
-          if (cartItems[item._id] > 0) {
+          // Only render items that exist in cart with quantity > 0
+          if (cartItems[item._id] && cartItems[item._id] > 0) {
             return (
               <div key={item._id}>
                 <div className="cart-items-title cart-items-item">

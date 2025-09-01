@@ -1,0 +1,258 @@
+.floating-cart {
+  position: fixed;
+  top: 50%;
+  right: 0;
+  transform: translateY(-50%);
+  z-index: 1000;
+  background: white;
+  border-radius: 12px 0 0 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+  border: 1px solid tomato;
+  border-right: none;
+  max-width: 320px;
+  animation: slideInFromRight 0.3s ease-out;
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translate(100%, -50%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(-50%);
+    opacity: 1;
+  }
+}
+
+.floating-cart-content {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.cart-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.cart-icon-section {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.cart-icon {
+  width: 24px;
+  height: 24px;
+  filter: none;
+}
+
+.cart-count {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: #ff6347;
+  color: white;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: bold;
+  min-width: 18px;
+}
+
+.cart-details {
+  flex: 1;
+}
+
+.cart-items-text {
+  margin: 0;
+  font-size: 14px;
+  color: #666;
+  font-weight: 500;
+}
+
+.cart-total-text {
+  margin: 0;
+  font-size: 16px;
+  color: #333;
+  font-weight: bold;
+}
+
+.cart-actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
+.view-cart-btn {
+  width: 100%;
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: #ff6347;
+  color: white;
+}
+
+.view-cart-btn:hover {
+  background: #e55342;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(255, 99, 71, 0.3);
+}
+
+
+
+
+
+/* Mobile Responsive Design - Keep floating behavior */
+@media (max-width: 768px) {
+  .floating-cart {
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    max-width: 280px;
+    border-radius: 12px 0 0 12px;
+    border: 1px solid tomato;
+    border-right: none;
+  }
+  
+  .floating-cart-content {
+    padding: 12px;
+  }
+  
+  .cart-actions {
+    justify-content: center;
+  }
+  
+  .view-cart-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .floating-cart {
+    top: 50%;
+    right: 0;
+    transform: translateY(-50%);
+    max-width: 250px;
+    border-radius: 10px 0 0 10px;
+    border: 1px solid tomato;
+    border-right: none;
+  }
+  
+  .floating-cart-content {
+    padding: 10px;
+  }
+  
+  .cart-info {
+    gap: 6px;
+  }
+  
+  .cart-items-text {
+    font-size: 12px;
+  }
+  
+  .cart-total-text {
+    font-size: 14px;
+  }
+  
+  .view-cart-btn {
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+  
+  .cart-icon {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .cart-count {
+    width: 16px;
+    height: 16px;
+    font-size: 9px;
+    top: -6px;
+    right: -6px;
+  }
+}
+
+/* Enhanced hover effects */
+.floating-cart:hover {
+  box-shadow: 0 12px 40px rgba(255, 99, 71, 0.2);
+  transform: translate(-2px, -50%);
+  transition: all 0.3s ease;
+}
+
+/* Extra small screens - Very compact floating cart */
+@media (max-width: 360px) {
+  .floating-cart {
+    max-width: 220px;
+    border-radius: 8px 0 0 8px;
+  }
+  
+  .floating-cart-content {
+    padding: 8px;
+  }
+  
+  .cart-info {
+    gap: 4px;
+  }
+  
+  .cart-items-text {
+    font-size: 11px;
+  }
+  
+  .cart-total-text {
+    font-size: 13px;
+  }
+  
+  .view-cart-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+  
+  .cart-icon {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .cart-count {
+    width: 14px;
+    height: 14px;
+    font-size: 8px;
+    top: -5px;
+    right: -5px;
+  }
+}
+
+/* Touch-friendly elements for mobile - Keep floating */
+@media (hover: none) and (pointer: coarse) {
+  .view-cart-btn {
+    padding: 12px 16px;
+    font-size: 14px;
+    min-height: 44px; /* iOS touch target minimum */
+  }
+
+  .floating-cart:hover {
+    transform: translateY(-50%); /* Keep centered on touch */
+  }
+  
+  .floating-cart {
+    /* Ensure cart doesn't interfere with scrolling on mobile */
+    pointer-events: auto;
+  }
+  
+  .floating-cart-content {
+    /* Better touch experience */
+    padding: 12px;
+  }
+}

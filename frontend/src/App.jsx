@@ -11,9 +11,11 @@ import MyOrders from "./Pages/MyOrders/MyOrders"
 import Chatbot from './Components/Chatbot/Chatbot'
 import Verify from '../src/Pages/Verify/Verify'
 import ResetPassword from './Components/LoginPopup/ResetPassword'
+import FloatingCart from './Components/FloatingCart/FloatingCart'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 const App = () => {
-
 
   const [showLogin,setShowLogin] = useState(false)
 
@@ -35,6 +37,23 @@ const App = () => {
       
       {/* Persistent Chatbot - always available */}
       <Chatbot />
+      
+      {/* Floating Cart - appears when items are in cart */}
+      <FloatingCart setShowLogin={setShowLogin} />
+      
+      {/* Toast Container for notifications */}
+      <ToastContainer
+        position="top-right"
+        autoClose={3000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+      />
     </div>
       <Footer/>
    </>
