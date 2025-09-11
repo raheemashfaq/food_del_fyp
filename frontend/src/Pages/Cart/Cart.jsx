@@ -39,7 +39,7 @@ const Cart = ({ setShowLogin }) => {
           <p>Price</p>
           <p>Quantity</p>
           <p>Total</p>
-          <p>Remove</p>
+          <p></p>
         </div>
         <br />
         <hr />
