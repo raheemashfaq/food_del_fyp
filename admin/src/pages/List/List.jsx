@@ -5,7 +5,7 @@ import {toast} from "react-toastify"
 
 const List = () => {
   // {url}
-  const url = "http://localhost:4000"
+  const url = import.meta.env.VITE_API_URL
   const [list,setList] = useState([]);
 
   const  fetchList = async () => {

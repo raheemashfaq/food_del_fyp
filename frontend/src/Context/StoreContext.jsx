@@ -8,7 +8,7 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) =>{
 
     const [cartItems, setCartItems] = useState({});
-    const url = import.meta.env.VITE_API_URL || "http://localhost:4000"
+    const url = import.meta.env.VITE_API_URL 
     const [token,setToken] = useState("")
     // Data carry from database now
     const [food_list,setFoodList] = useState([]);

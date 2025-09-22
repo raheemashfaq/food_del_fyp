@@ -5,7 +5,7 @@ export const AdminContext = createContext();
 const AdminContextProvider = ({ children }) => {
   const [token, setToken] = useState(localStorage.getItem('adminToken') || '');
   const [adminData, setAdminData] = useState(null);
-  const url = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+  const url = import.meta.env.VITE_API_URL;
 
   // Save token to localStorage whenever it changes
   useEffect(() => {
