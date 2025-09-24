@@ -7,9 +7,9 @@ const transporter = nodemailer.createTransport({
     pass: process.env.EMAIL_PASS, // app password
   },
 });
-
+const url = process.env.Passowrd_url
 export const sendVerificationEmail = async (toEmail, token) => {
-  const verificationLink = `http://localhost:5000/api/auth/verify/${token}`; // adjust to your backend route
+  const verificationLink = `url/api/auth/verify/${token}`; // adjust to your backend route
 
   await transporter.sendMail({
     from: `"My App" <${process.env.EMAIL_USER}>`,
