@@ -3,12 +3,14 @@ import './Promos.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { AdminContext } from '../../Context/AdminContext';
+import Skeleton from '../../components/Skeleton/Skeleton';
 
 const Promos = () => {
   const { url } = useContext(AdminContext);
   const [promos, setPromos] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [foodList, setFoodList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [formData, setFormData] = useState({
     code: '',
     discountType: 'percentage',
@@ -23,12 +25,15 @@ const Promos = () => {
 
   const fetchPromos = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(`${url}/api/promo/list`);
       if (response.data.success) {
         setPromos(response.data.data);
       }
     } catch (error) {
       toast.error("Failed to fetch promo codes");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -189,7 +194,20 @@ const Promos = () => {
           <p>Status</p>
           <p>Actions</p>
         </div>
-        {promos.length === 0 ? (
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, i) => (
+            <div key={i} className="promos-table-row">
+              <Skeleton width="80px" height="16px" radius="4px" />
+              <Skeleton width="60%" height="14px" />
+              <Skeleton width="70%" height="14px" />
+              <Skeleton width="50%" height="14px" />
+              <Skeleton width="50%" height="14px" />
+              <Skeleton width="60%" height="14px" />
+              <Skeleton width="60px" height="20px" radius="10px" />
+              <Skeleton width="60px" height="28px" radius="6px" />
+            </div>
+          ))
+        ) : promos.length === 0 ? (
           <p className="no-promos">No promo codes yet. Create one above!</p>
         ) : (
           promos.map((promo) => (

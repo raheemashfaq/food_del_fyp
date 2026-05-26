@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import "./FoodDisplay.css";
 import { StoreContext } from "../../Context/StoreContext";
 import FoodItem from "../FoodItem/FoodItem";
+import FoodItemSkeleton from "../FoodItem/FoodItemSkeleton";
 import Chatbot from "../Chatbot/Chatbot";
 import LocationMap from "../LocationMap/LocationMap";
 
@@ -28,10 +29,16 @@ const FoodDisplay = ({ category }) => {
         }
       </h2>
       {isLoading && food_list.length === 0 ? (
-        <div className="food-display-loading">
-          <div className="food-display-spinner"></div>
-          <p>Loading dishes… the server may be waking up, this can take up to a minute.</p>
-        </div>
+        <>
+          <div className="food-display-list">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <FoodItemSkeleton key={i} />
+            ))}
+          </div>
+          <p className="food-display-waking">
+            Loading dishes… the server may be waking up, this can take up to a minute.
+          </p>
+        </>
       ) : (
       <div className="food-display-list">
         {filteredFoods.length > 0 ? (

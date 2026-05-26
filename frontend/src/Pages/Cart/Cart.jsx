@@ -5,6 +5,7 @@ import { StoreContext } from '../../Context/StoreContext';
 import { formatPKR } from '../../utils/format';
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import Skeleton from '../../Components/Skeleton/Skeleton';
 
 const Cart = ({ setShowLogin }) => {
   const { cartItems, food_list, removeFromCart, getTotalCartAmount, url, token,
@@ -13,16 +14,20 @@ const Cart = ({ setShowLogin }) => {
   const navigate = useNavigate();
   const [promoLoading, setPromoLoading] = useState(false);
   const [availablePromos, setAvailablePromos] = useState([]);
+  const [promosLoading, setPromosLoading] = useState(true);
 
   useEffect(() => {
     const fetchPromos = async () => {
       try {
+        setPromosLoading(true);
         const res = await axios.get(`${url}/api/promo/active`);
         if (res.data.success) {
           setAvailablePromos(res.data.data);
         }
       } catch (err) {
         console.error("Error fetching promos:", err);
+      } finally {
+        setPromosLoading(false);
       }
     };
     fetchPromos();
@@ -169,8 +174,25 @@ const Cart = ({ setShowLogin }) => {
               </div>
             )}
 
+            {/* Available Promo Codes - loading skeleton */}
+            {!appliedPromo && promosLoading && (
+              <div className="available-promos">
+                <p className="available-promos-title">Available Offers</p>
+                {Array.from({ length: 2 }).map((_, i) => (
+                  <div key={i} className="promo-card">
+                    <div className="promo-card-left">
+                      <Skeleton width="90px" height="22px" radius="6px" />
+                      <Skeleton width="70%" height="14px" style={{ marginTop: "8px" }} />
+                      <Skeleton width="50%" height="12px" style={{ marginTop: "6px" }} />
+                    </div>
+                    <Skeleton width="80px" height="36px" radius="8px" />
+                  </div>
+                ))}
+              </div>
+            )}
+
             {/* Available Promo Codes */}
-            {!appliedPromo && availablePromos.length > 0 && (
+            {!appliedPromo && !promosLoading && availablePromos.length > 0 && (
               <div className="available-promos">
                 <p className="available-promos-title">Available Offers</p>
                 {availablePromos.map((promo) => {

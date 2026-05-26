@@ -2,20 +2,29 @@ import React,{useState,useEffect} from 'react'
 import './List.css'
 import axios from 'axios';
 import {toast} from "react-toastify"
+import Skeleton from '../../components/Skeleton/Skeleton'
 
 const List = () => {
   // {url}
   const url = import.meta.env.VITE_API_URL
   const [list,setList] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const  fetchList = async () => {
-    const response = await axios.get(`${url}/api/food/list`)
-    console.log(response.data)
-    if(response.data.success){
-      setList(response.data.data);
-    }
-    else{
-      TransformStream.error("Error")
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${url}/api/food/list`)
+      console.log(response.data)
+      if(response.data.success){
+        setList(response.data.data);
+      }
+      else{
+        toast.error("Error")
+      }
+    } catch (error) {
+      toast.error("Error fetching foods")
+    } finally {
+      setIsLoading(false);
     }
   }
 
@@ -46,7 +55,17 @@ const List = () => {
             <p>Price</p>
             <p>Action</p>
         </div>
-        {list.map((item,index)=>{
+        {isLoading
+          ? Array.from({ length: 6 }).map((_, index) => (
+              <div key={index} className="list-table-format">
+                <Skeleton width="50px" height="50px" radius="6px" />
+                <Skeleton width="70%" height="14px" />
+                <Skeleton width="60%" height="14px" />
+                <Skeleton width="50%" height="14px" />
+                <Skeleton width="16px" height="16px" />
+              </div>
+            ))
+          : list.map((item,index)=>{
             return (
               <div key={index} className="list-table-format">
                   <img src={`${url}/images/`+item.image}/>

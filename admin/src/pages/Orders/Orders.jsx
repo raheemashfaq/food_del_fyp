@@ -3,14 +3,17 @@ import './Orders.css';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { assets } from '../../assets/assets';
+import Skeleton from '../../components/Skeleton/Skeleton';
 
 const Orders = () => {
   const url = import.meta.env.VITE_API_URL
   const [orders, setOrders] = useState([]);
   const [filter, setFilter] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
 
   const fetchAllOrders = async () => {
     try {
+      setIsLoading(true);
       const response = await axios.get(`${url}/api/order/list`);
       if (response.data.success) {
         setOrders(response.data.data);
@@ -19,6 +22,8 @@ const Orders = () => {
       }
     } catch (error) {
       toast.error("Server error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -69,7 +74,24 @@ const Orders = () => {
       </div>
 
       <div className="order-list">
-        {filteredOrders.map((order, index) => (
+        {isLoading ? (
+          Array.from({ length: 5 }).map((_, index) => (
+            <div key={index} className='order-item'>
+              <Skeleton width="50px" height="50px" radius="6px" />
+              <div>
+                <Skeleton width="80%" height="14px" />
+                <Skeleton width="50%" height="14px" style={{ marginTop: "10px" }} />
+                <Skeleton width="90%" height="12px" style={{ marginTop: "10px" }} />
+                <Skeleton width="40%" height="12px" style={{ marginTop: "8px" }} />
+              </div>
+              <Skeleton width="60px" height="14px" />
+              <Skeleton width="70px" height="14px" />
+              <Skeleton width="100%" height="14px" />
+              <Skeleton width="100%" height="32px" radius="6px" />
+            </div>
+          ))
+        ) : (
+          filteredOrders.map((order, index) => (
           <div key={index} className='order-item'>
             <img src={assets.parcel_icon} alt="" />
             <div>
@@ -112,7 +134,8 @@ const Orders = () => {
               <option value="Delivered">Delivered</option>
             </select>
           </div>
-        ))}
+          ))
+        )}
       </div>
     </div>
   );
