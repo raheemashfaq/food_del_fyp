@@ -267,8 +267,26 @@ export default function Chatbot() {
 
   return (
     <div className="chatbot-wrapper" ref={chatbotRef}>
-      <button className="chatbot-toggle" onClick={() => setOpen(v => !v)}>
-        {open ? "Close Chat" : "Chat"}
+      <button
+        className={`chatbot-toggle ${open ? "chatbot-toggle-open" : ""}`}
+        onClick={() => setOpen(v => !v)}
+        aria-label={open ? "Close chat" : "Open chat"}
+      >
+        {open ? (
+          <span className="chatbot-toggle-close-icon">×</span>
+        ) : (
+          <>
+            <span className="chatbot-toggle-icon">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 3C6.477 3 2 6.91 2 11.5c0 2.31 1.14 4.39 2.98 5.88L4 21l3.9-1.55c1.25.42 2.63.65 4.1.65 5.523 0 10-3.91 10-8.5S17.523 3 12 3Z" fill="currentColor"/>
+                <circle cx="8" cy="11.5" r="1.2" fill="#fff"/>
+                <circle cx="12" cy="11.5" r="1.2" fill="#fff"/>
+                <circle cx="16" cy="11.5" r="1.2" fill="#fff"/>
+              </svg>
+            </span>
+            <span className="chatbot-toggle-text">Any Question?</span>
+          </>
+        )}
       </button>
 
       {open && (
