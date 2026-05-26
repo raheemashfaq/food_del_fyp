@@ -4,6 +4,14 @@ import { StoreContext } from "../../Context/StoreContext";
 import tomoAnimation from "../../assets/lottie/tomo.json";
 import "./Chatbot.css";
 
+// Render a line of bot text, converting **bold** markdown into real bold.
+const renderFormatted = (text) =>
+  text.split(/(\*\*[^*]+\*\*)/g).map((part, i) =>
+    part.startsWith("**") && part.endsWith("**")
+      ? <strong key={i}>{part.slice(2, -2)}</strong>
+      : part
+  );
+
 export default function Chatbot() {
   const [open, setOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -325,7 +333,7 @@ export default function Chatbot() {
                   </strong>
                   <div style={{ marginTop: 4 }}>
                     {m.text.split("\n").map((line, idx) => (
-                      <div key={idx}><small>{line}</small></div>
+                      <div key={idx}><small>{renderFormatted(line)}</small></div>
                     ))}
                   </div>
                   <div className="chatbot-timestamp">
@@ -397,7 +405,7 @@ export default function Chatbot() {
               onKeyDown={onKeyPress}
               placeholder="Type a message..."
             />
-            <button className="chatbot-send" onClick={sendMessage}>
+            <button className="chatbot-send" onClick={() => sendMessage()}>
               Send
             </button>
           </div>
