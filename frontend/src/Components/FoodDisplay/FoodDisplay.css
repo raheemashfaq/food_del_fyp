@@ -14,6 +14,36 @@
     row-gap:50px;
 }
 
+/* Loading state (covers Render free-tier cold start) */
+.food-display-loading {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 18px;
+    padding: 60px 20px;
+    text-align: center;
+    color: #666;
+}
+
+.food-display-loading p {
+    font-size: 16px;
+    max-width: 420px;
+}
+
+.food-display-spinner {
+    width: 44px;
+    height: 44px;
+    border: 4px solid #f0f0f0;
+    border-top-color: tomato;
+    border-radius: 50%;
+    animation: food-display-spin 0.9s linear infinite;
+}
+
+@keyframes food-display-spin {
+    to { transform: rotate(360deg); }
+}
+
 /* No results styles */
 .no-results {
     grid-column: 1 / -1;

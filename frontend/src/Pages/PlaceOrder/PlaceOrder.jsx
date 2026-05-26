@@ -6,7 +6,7 @@ import axios from 'axios';
 import { formatPKR } from '../../utils/format';
 
 const PlaceOrder = () => {
-  const { getTotalCartAmount, token, food_list, cartItems, url } = useContext(StoreContext);
+  const { getTotalCartAmount, token, food_list, cartItems, url, promoDiscount, appliedPromo, removePromoCode } = useContext(StoreContext);
   const navigate = useNavigate();
 
   const [data, setData] = useState({
@@ -34,8 +34,10 @@ const PlaceOrder = () => {
       let orderData = {
         address: data,
         items: orderItems,
-        amount: getTotalCartAmount() + 200,
-        paymentMethod // 🆕 Include payment method
+        amount: getTotalCartAmount() + 200 - promoDiscount,
+        paymentMethod,
+        promoCode: appliedPromo || null,
+        discount: promoDiscount
       };
 
       const response = await axios.post(`${url}/api/order/place`, orderData, {
@@ -43,6 +45,7 @@ const PlaceOrder = () => {
       });
 
       if (response.data.success) {
+        removePromoCode();
         if (paymentMethod === "Stripe") {
           window.location.replace(response.data.session_url);
         } else {
@@ -122,12 +125,21 @@ const PlaceOrder = () => {
             <p>{getTotalCartAmount() === 0 ? formatPKR(0) : formatPKR(200)}</p>
           </div>
           <hr/>
+          {promoDiscount > 0 && (
+            <>
+              <div className="cart-total-details" style={{color: '#28a745'}}>
+                <p>Discount ({appliedPromo})</p>
+                <p>-{formatPKR(promoDiscount)}</p>
+              </div>
+              <hr/>
+            </>
+          )}
           <div className="cart-total-details">
             <b>Total</b>
             <b>
               {getTotalCartAmount() === 0
                 ? formatPKR(0)
-                : formatPKR(getTotalCartAmount() + 200)}
+                : formatPKR(getTotalCartAmount() + 200 - promoDiscount)}
             </b>
           </div>
           <button type='submit'>

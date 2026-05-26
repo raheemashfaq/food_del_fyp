@@ -9,6 +9,7 @@ import orderRouter from "./routes/orderRoute.js";
 import authRouter from "./routes/authRoute.js";
 import chatRouter from './routes/chatRoute.js';
 import adminRouter from "./routes/adminRoute.js";
+import promoRouter from "./routes/promoRoute.js";
 
 
 // chatbot
@@ -34,9 +35,16 @@ app.use("/api/order",orderRouter)
 app.use("/api/auth", authRouter)
 app.use("/api/chat", chatRouter);
 app.use("/api/admin", adminRouter);
+app.use("/api/promo", promoRouter);
 
  app.get("/",(req,res)=>{
     res.send("API Working")
+ })
+
+ // lightweight keep-alive endpoint for external uptime pingers (e.g. UptimeRobot)
+ // hitting this every ~10 min prevents Render free tier from spinning the server down
+ app.get("/health",(req,res)=>{
+    res.status(200).json({ status: "ok", uptime: process.uptime() })
  })
 
 app.listen(port,()=>{

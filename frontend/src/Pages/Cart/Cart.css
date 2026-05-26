@@ -89,6 +89,129 @@
   pointer-events: none;
 }
 
+.cart-discount p {
+  color: #28a745;
+  font-weight: 500;
+}
+.cart-promo-applied {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #e8f5e9;
+  padding: 10px 15px;
+  border-radius: 4px;
+  border: 1px solid #a5d6a7;
+}
+.promo-applied-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.promo-tag {
+  font-weight: 600;
+  color: #2e7d32;
+  font-size: 14px;
+}
+.promo-saving {
+  font-size: 12px;
+  color: #555;
+}
+.promo-remove-btn {
+  background-color: tomato;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+
+/* Available Promos Section */
+.available-promos {
+  margin-top: 20px;
+}
+.available-promos-title {
+  font-weight: 600;
+  font-size: 15px;
+  color: #333 !important;
+  margin-bottom: 10px;
+}
+.promo-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 14px;
+  margin-bottom: 10px;
+  border: 1px dashed #ff6347;
+  border-radius: 6px;
+  background-color: #fff8f6;
+}
+.promo-card-disabled {
+  border-color: #ccc;
+  background-color: #f5f5f5;
+  opacity: 0.7;
+}
+.promo-card-left {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.promo-card-code {
+  font-weight: 700;
+  font-size: 14px;
+  color: #ff6347;
+  letter-spacing: 1px;
+  background-color: #ffe8e2;
+  padding: 2px 8px;
+  border-radius: 3px;
+  display: inline-block;
+  width: fit-content;
+}
+.promo-card-disabled .promo-card-code {
+  color: #888;
+  background-color: #e8e8e8;
+}
+.promo-card-desc {
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+}
+.promo-card-min {
+  font-size: 11px;
+  color: #777;
+}
+.promo-card-add {
+  color: #ff6347;
+  font-weight: 500;
+}
+.promo-card-expiry {
+  font-size: 11px;
+  color: #999;
+}
+.promo-card-apply {
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  padding: 7px 18px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+.promo-card-apply:hover {
+  background-color: #e5533d;
+}
+.promo-card-apply-disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  font-size: 11px;
+}
+.promo-card-apply-disabled:hover {
+  background-color: #ccc;
+}
 
 @media(max-width:750px){
     .cart-bottom{
