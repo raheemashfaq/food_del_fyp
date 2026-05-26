@@ -25,9 +25,13 @@
 }
 
 .chatbot-mascot {
-  width: 96px;
-  height: 96px;
-  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
+  width: 86px;
+  height: 86px;
+  padding: 8px;
+  border-radius: 50%;
+  /* colored disc so the white robot stays visible on a white page */
+  background: radial-gradient(circle at 50% 38%, #ff7d62 0%, tomato 65%, #e8492f 100%);
+  box-shadow: 0 8px 20px rgba(255, 99, 71, 0.45);
 }
 
 .chatbot-greeting {
