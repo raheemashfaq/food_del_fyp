@@ -1,9 +1,9 @@
-import React, { useState, useContext } from 'react';
+import { useState, useContext } from 'react';
 import axios from 'axios';
 import './AdminForgotPassword.css';
 import { AdminContext } from '../../Context/AdminContext';
 
-const AdminForgotPassword = ({ setShowLogin, setShowForgotPassword }) => {
+const AdminForgotPassword = ({ setShowForgotPassword }) => {
   const { url } = useContext(AdminContext);
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
@@ -63,7 +63,7 @@ const AdminForgotPassword = ({ setShowLogin, setShowForgotPassword }) => {
       
       <div className="admin-forgot-password-content">
         <p className="admin-forgot-password-description">
-          Enter your admin email address and we'll send you a link to reset your password.
+          Enter your admin email address and we&apos;ll send you a link to reset your password.
         </p>
         
         <div className="admin-login-popup-inputs">

@@ -1,4 +1,3 @@
-import React from "react";
 import "./Skeleton.css";
 
 // Generic shimmer placeholder block. Compose these to mirror real content layout.

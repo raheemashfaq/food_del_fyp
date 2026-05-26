@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from 'react';
+import { useContext, useState, useEffect } from 'react';
 import './AdminLoginPopup.css';
 import { AdminContext } from '../../Context/AdminContext';
 import axios from 'axios';

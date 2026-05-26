@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import { useContext } from 'react'
 import './Navbar.css'
 import {assets} from "../../assets/assets"
 import { AdminContext } from '../../Context/AdminContext'
@@ -15,13 +15,21 @@ const Navbar = () => {
     <div className="navbar">
         <img className='logo' src={assets.logo} alt=""/>
         <div className="navbar-right">
-          {/* <img className='profile' src={assets.profile_image}  alt =""/> */}
+          <img className='profile' src={assets.profile_image}  alt =""/>
           <button className="logout-btn" onClick={handleLogout}>
             Logout
           </button>
-        </div>
+        </div>  
     </div>
-  )
+  )                                       
 }
 
 export default Navbar
+
+
+
+
+
+
+
+

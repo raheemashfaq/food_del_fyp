@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import {useState} from 'react'
 import './Add.css'
 import { assets } from '../../assets/assets'
 // import { useEffect } from 'react';
@@ -71,7 +71,7 @@ const Add = () => {
 
             <div className="add-product-description flex-col">
                 <p>Product description</p>
-                <textarea onChange = {onChangeHandler} value={data.description}  name='description'  id="" cols="30" row="10" placeholder='Write content here' ></textarea>
+                <textarea onChange = {onChangeHandler} value={data.description}  name='description'  id="" cols="30" rows="10" placeholder='Write content here' ></textarea>
             </div>
 
             <div className="add-category-price">
