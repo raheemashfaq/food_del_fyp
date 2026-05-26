@@ -5,48 +5,60 @@
   z-index: 9999;
 }
 
-.chatbot-toggle {
+/* Animated mascot launcher (Tomo the delivery robot) */
+.chatbot-launcher {
   display: flex;
   align-items: center;
-  gap: 9px;
-  background: linear-gradient(135deg, tomato, #e55347);
-  color: white;
+  gap: 4px;
+  background: transparent;
   border: none;
-  padding: 12px 20px;
-  border-radius: 30px;
+  padding: 0;
   cursor: pointer;
-  font-weight: 600;
-  font-size: 15px;
-  box-shadow: 0 6px 18px rgba(255, 99, 71, 0.4);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
   margin-left: auto;
-}
-
-.chatbot-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(255, 99, 71, 0.5);
-}
-
-.chatbot-toggle-icon {
-  display: flex;
-  align-items: center;
-  /* subtle attention nudge so users notice the launcher */
-  animation: chatbot-bob 2.4s ease-in-out infinite;
+  /* gentle bob so the mascot feels alive and draws the eye */
+  animation: chatbot-bob 3s ease-in-out infinite;
 }
 
 @keyframes chatbot-bob {
   0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-3px); }
+  50% { transform: translateY(-6px); }
 }
 
-.chatbot-toggle-text {
+.chatbot-mascot {
+  width: 96px;
+  height: 96px;
+  filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.18));
+}
+
+.chatbot-greeting {
+  position: relative;
+  background: tomato;
+  color: white;
+  font-weight: 600;
+  font-size: 13px;
   white-space: nowrap;
+  padding: 8px 12px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(255, 99, 71, 0.35);
+  /* float in gently after load */
+  animation: chatbot-greeting-pop 0.5s ease-out 0.6s both;
 }
 
-/* While the window is open, hide the launcher — the window header has its
-   own × close button and clicking outside also closes it */
-.chatbot-toggle-open {
-  display: none;
+/* little tail pointing toward the mascot */
+.chatbot-greeting::after {
+  content: "";
+  position: absolute;
+  right: -6px;
+  top: 50%;
+  transform: translateY(-50%);
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 7px solid tomato;
+}
+
+@keyframes chatbot-greeting-pop {
+  from { opacity: 0; transform: translateX(8px) scale(0.9); }
+  to   { opacity: 1; transform: translateX(0) scale(1); }
 }
 
 .chatbot-window {
