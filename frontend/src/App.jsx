@@ -35,8 +35,8 @@ const App = () => {
         <Route path='/reset-password/:token' element={<ResetPassword />} />
       </Routes>
       
-      {/* Persistent Chatbot - temporarily disabled */}
-      {/* <Chatbot /> */}
+      {/* Persistent Chatbot - floating widget shown on every page */}
+      <Chatbot />
       
       {/* Floating Cart - appears when items are in cart */}
       <FloatingCart setShowLogin={setShowLogin} />
