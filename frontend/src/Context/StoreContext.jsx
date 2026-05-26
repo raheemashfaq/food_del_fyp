@@ -8,12 +8,18 @@ export const StoreContext = createContext(null);
 const StoreContextProvider = (props) =>{
 
     const [cartItems, setCartItems] = useState({});
-    const url = import.meta.env.VITE_API_URL 
+    const url = import.meta.env.VITE_API_URL
     const [token,setToken] = useState("")
     // Data carry from database now
     const [food_list,setFoodList] = useState([]);
+    // Loading state for initial food fetch (covers Render free-tier cold start)
+    const [isLoading, setIsLoading] = useState(true);
     // Search functionality
     const [searchTerm, setSearchTerm] = useState("");
+    // Promo code state
+    const [promoCode, setPromoCode] = useState("");
+    const [promoDiscount, setPromoDiscount] = useState(0);
+    const [appliedPromo, setAppliedPromo] = useState(null); // stores applied promo code string
 
     const addToCart = async (itemId) => {
         // Find the food item to get its name for toast
@@ -100,14 +106,58 @@ const StoreContextProvider = (props) =>{
         }
         return totalItems;
     }
-    // useEffect(()=>{
-    //     console.log(cartItems);
-    // },[cartItems])
+    const applyPromoCode = async (code) => {
+        try {
+            const subtotal = getTotalCartAmount();
+            // Build cart items array for product-specific promo validation
+            const cartItemsArray = [];
+            for (const itemId in cartItems) {
+                if (cartItems[itemId] > 0) {
+                    const food = food_list.find(f => f._id === itemId);
+                    if (food) {
+                        cartItemsArray.push({ _id: food._id, quantity: cartItems[itemId], price: food.price });
+                    }
+                }
+            }
+            const response = await axios.post(url + "/api/promo/validate", { code, subtotal, cartItems: cartItemsArray }, { headers: { token } });
+            if (response.data.success) {
+                setAppliedPromo(response.data.promoCode);
+                setPromoDiscount(response.data.discount);
+                return { success: true, message: response.data.message, discount: response.data.discount };
+            } else {
+                return { success: false, message: response.data.message };
+            }
+        } catch (error) {
+            return { success: false, message: "Failed to validate promo code." };
+        }
+    };
+
+    const removePromoCode = () => {
+        setAppliedPromo(null);
+        setPromoDiscount(0);
+        setPromoCode("");
+    };
 
     // Data carry from database now
     const fetchFoodList = async () => {
-        const response = await axios.get(url+"/api/food/list");
-        setFoodList(response.data.data);
+        try {
+            setIsLoading(true);
+            const response = await axios.get(url+"/api/food/list");
+            setFoodList(response.data.data);
+        } catch (error) {
+            // On a cold start the first request can time out before the server wakes.
+            // Retry once after a short delay so the user doesn't see an empty page.
+            console.error("Failed to fetch food list, retrying...", error);
+            try {
+                await new Promise((r) => setTimeout(r, 3000));
+                const response = await axios.get(url+"/api/food/list");
+                setFoodList(response.data.data);
+            } catch (retryError) {
+                console.error("Retry failed:", retryError);
+            }
+        } finally {
+            setIsLoading(false);
+        }
     }
 
     const loadCartData = async (token) => {
@@ -150,6 +200,7 @@ const StoreContextProvider = (props) =>{
 
     const contextValue = {
         food_list,
+        isLoading,
         cartItems,
         setCartItems,
         addToCart,
@@ -160,7 +211,13 @@ const StoreContextProvider = (props) =>{
         token,
         setToken,
         searchTerm,
-        setSearchTerm
+        setSearchTerm,
+        promoCode,
+        setPromoCode,
+        promoDiscount,
+        appliedPromo,
+        applyPromoCode,
+        removePromoCode
     }
 
     return (

@@ -6,7 +6,7 @@ import Chatbot from "../Chatbot/Chatbot";
 import LocationMap from "../LocationMap/LocationMap";
 
 const FoodDisplay = ({ category }) => {
-  const { food_list, searchTerm } = useContext(StoreContext);
+  const { food_list, searchTerm, isLoading } = useContext(StoreContext);
 
   // Filter foods based on search term and category
   const filteredFoods = food_list.filter((item) => {
@@ -27,6 +27,12 @@ const FoodDisplay = ({ category }) => {
           "Top dishes near you"
         }
       </h2>
+      {isLoading && food_list.length === 0 ? (
+        <div className="food-display-loading">
+          <div className="food-display-spinner"></div>
+          <p>Loading dishes… the server may be waking up, this can take up to a minute.</p>
+        </div>
+      ) : (
       <div className="food-display-list">
         {filteredFoods.length > 0 ? (
           filteredFoods.map((item, index) => (
@@ -48,6 +54,7 @@ const FoodDisplay = ({ category }) => {
           </div>
         )}
       </div>
+      )}
 
       {/* Location Map Section */}
       <LocationMap 
@@ -58,8 +65,8 @@ const FoodDisplay = ({ category }) => {
         zoom={13}
       />
 
-      {/* Chatbot */}
-      <Chatbot />
+      {/* Chatbot - temporarily disabled */}
+      {/* <Chatbot /> */}
     </div>
   );
 };

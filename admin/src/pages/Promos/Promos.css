@@ -1,0 +1,136 @@
+.promos-page {
+  padding: 20px;
+}
+.promos-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.promos-header p {
+  font-size: 20px;
+  font-weight: 600;
+}
+.promos-add-btn {
+  background-color: tomato;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Form */
+.promo-form {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  border: 1px solid #e0e0e0;
+}
+.promo-form-row {
+  display: flex;
+  gap: 15px;
+  margin-bottom: 15px;
+  flex-wrap: wrap;
+}
+.promo-form-field {
+  flex: 1;
+  min-width: 180px;
+}
+.promo-form-field label {
+  display: block;
+  font-size: 13px;
+  color: #555;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+.promo-form-field input,
+.promo-form-field select {
+  width: 100%;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.promo-submit-btn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 10px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+/* Table */
+.promos-table-header,
+.promos-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1.2fr 1.5fr 0.8fr 1fr 0.8fr 0.7fr 0.7fr;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 15px;
+  border: 1px solid #cacaca;
+  font-size: 13px;
+}
+.promos-table-header {
+  background-color: #f9f9f9;
+  font-weight: 600;
+}
+.promo-code-cell {
+  font-weight: 600;
+  color: #333;
+  letter-spacing: 1px;
+}
+.promo-status {
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 500;
+}
+.promo-status.active {
+  background-color: #d4edda;
+  color: #155724;
+}
+.promo-status.inactive {
+  background-color: #f8d7da;
+  color: #721c24;
+}
+.promo-delete-btn {
+  background-color: tomato;
+  color: white;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+.no-promos {
+  text-align: center;
+  padding: 30px;
+  color: #888;
+}
+
+/* Product-specific promo styles */
+.promo-products-cell {
+  font-size: 12px;
+  line-height: 1.3;
+}
+.promo-min-qty {
+  color: #e67e22;
+  font-weight: 600;
+}
+
+@media (max-width: 768px) {
+  .promos-table-header,
+  .promos-table-row {
+    grid-template-columns: 1fr 1fr 1fr;
+    font-size: 12px;
+  }
+  .promo-form-row {
+    flex-direction: column;
+  }
+}
